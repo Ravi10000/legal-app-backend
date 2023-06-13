@@ -81,3 +81,18 @@ export async function updateCatgory(req, res) {
     console.log(err);
   }
 }
+
+export async function deleteCategory(req, res) {
+  try {
+    const { categoryId } = req?.params;
+    if (!categoryId) {
+      return res.status(400).json({ message: "categoryId is missing" });
+    }
+    const deletedCategory = await Category.findByIdAndDelete(categoryId);
+    fs.unlinkSync(`${uploadPath}/${deletedCategory?.icon_url}`);
+
+    return res.status(200).json({ status: "success" });
+  } catch (err) {
+    console.log(err);
+  }
+}
