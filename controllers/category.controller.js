@@ -68,7 +68,6 @@ export async function updateCatgory(req, res) {
     }
 
     const catgory = await Category.findById(req?.body?.categoryId);
-    fs.unlinkSync(`${uploadPath}/${catgory?.icon_url}`);
 
     const updatedCategory = await Category.findByIdAndUpdate(
       req?.body?.categoryId,
@@ -76,6 +75,7 @@ export async function updateCatgory(req, res) {
       { new: true }
     );
 
+    deleteImage(catgory?.icon_url);
     return res.status(200).json({ category: updatedCategory });
   } catch (err) {
     console.log(err);
@@ -89,10 +89,19 @@ export async function deleteCategory(req, res) {
       return res.status(400).json({ message: "categoryId is missing" });
     }
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
-    fs.unlinkSync(`${uploadPath}/${deletedCategory?.icon_url}`);
+    // fs.unlinkSync(`${uploadPath}/${deletedCategory?.icon_url}`);
+    deleteImage(deletedCategory?.icon_url);
 
     return res.status(200).json({ status: "success" });
   } catch (err) {
     console.log(err);
+  }
+}
+
+function deleteImage(imageName) {
+  try {
+    fs.unlinkSync(`${uploadPath}/${imageName}`);
+  } catch (err) {
+    console.log(err.message);
   }
 }
