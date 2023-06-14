@@ -1,6 +1,7 @@
 import express from "express";
 import {
   addContact,
+  deleteContact,
   getAllContacts,
   getContactById,
   updateContact,
@@ -14,4 +15,6 @@ router.put("/", upload.single("icon"), updateContact);
 
 router.get("/:contactId", getContactById);
 router.get("/", getAllContacts);
+
+router.delete("/:contactId", deleteContact);
 export default router;
