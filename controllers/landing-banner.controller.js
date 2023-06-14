@@ -3,7 +3,7 @@ import { deleteFile } from "../utils/delete-file.js";
 
 export async function addLandingBanner(req, res) {
   const { title, description, btnText, urlToLoad } = req?.body;
-  const { filename } = req?.file;
+  const filename = req?.file?.filename;
 
   if (!title || !description || !btnText || !urlToLoad || !filename) {
     if (filename) deleteFile(filename);
@@ -22,7 +22,7 @@ export async function addLandingBanner(req, res) {
       image_url: req?.file?.filename,
     });
 
-    return res.status(201).json({status: "success", landingBanner });
+    return res.status(201).json({ status: "success", landingBanner });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "internal server error" });
@@ -42,7 +42,7 @@ export async function getLandinBannerById(req, res) {
         message: "invalid landingBannerId, landingBanner not found",
       });
     }
-    return res.status(200).json({status: "success", landingBanner });
+    return res.status(200).json({ status: "success", landingBanner });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "internal server error" });
@@ -52,7 +52,7 @@ export async function getLandinBannerById(req, res) {
 export async function getAllLandingBanners(req, res) {
   try {
     const landingBanners = await LandingBanner.find();
-    return res.status(200).json({status: "success", landingBanners });
+    return res.status(200).json({ status: "success", landingBanners });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "internal server error" });
@@ -61,7 +61,7 @@ export async function getAllLandingBanners(req, res) {
 
 export async function updateLandingBanner(req, res) {
   const { landingBannerId, title, description, btnText, urlToLoad } = req?.body;
-  const { filename } = req?.file;
+  const filename = req?.file?.filename;
   if (!landingBannerId) {
     if (filename) deleteFile(filename);
     return res.status(400).json({ message: "landingBannerId is missing" });
@@ -88,7 +88,9 @@ export async function updateLandingBanner(req, res) {
       { new: true }
     );
 
-    return res.status(200).json({status: "success", landingBanner: updatedLandingBanner });
+    return res
+      .status(200)
+      .json({ status: "success", landingBanner: updatedLandingBanner });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "internal server error" });
@@ -112,12 +114,10 @@ export async function deleteLandingBanner(req, res) {
       });
     }
     deleteFile(landingBanner?.image_url);
-    res
-      .status(200)
-      .json({
-        status: "success",
-        message: "landingBanner deleted successfully",
-      });
+    res.status(200).json({
+      status: "success",
+      message: "landingBanner deleted successfully",
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "internal server error" });

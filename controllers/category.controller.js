@@ -2,7 +2,7 @@ import Category from "../models/category.model.js";
 import { deleteFile } from "../utils/delete-file.js";
 
 export async function addCategory(req, res) {
-  const { filename } = req?.file;
+  const filename = req?.file?.filename;
   const { name, description } = req?.body;
   if (!name || !description || !filename) {
     if (filename) deleteFile(filename);
