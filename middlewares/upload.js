@@ -10,8 +10,28 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
+    cb(
+      null,
+      file.fieldname +
+        "-" +
+        Date.now() +
+        path.extname(file.originalname).toLowerCase()
+    );
   },
+  // fileFilter: (req, file, cb) => {
+  //   const filetype = file.mimetype;
+  //   console.log({ filetype });
+  //   if (
+  //     filetype === "image/png" ||
+  //     filetype === "image/jpg" ||
+  //     filetype === "image/jpeg"
+  //   ) {
+  //     cb(null, true);
+  //   } else {
+  //     cb(null, false);
+  //     return cb(new Error("Only .png, .jpg and .jpeg format allowed!"));
+  //   }
+  // },
 });
 
 const upload = multer({ storage });

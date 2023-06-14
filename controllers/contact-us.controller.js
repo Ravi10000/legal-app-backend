@@ -1,8 +1,6 @@
 import ContactUs from "../models/contact-us.model.js";
 
 export async function addContactUs(req, res) {
-  console.log("addContactUs");
-  console.log(req?.body);
   const { companyName, email, firstName, lastName, mobileNumber, notes } =
     req?.body;
 
