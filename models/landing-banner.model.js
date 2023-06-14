@@ -24,9 +24,7 @@ const landingBannerSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: {
-      createdAt: "added_at",
-    },
+    timestamps: true,
   }
 );
 

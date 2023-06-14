@@ -9,6 +9,7 @@ import landingBannerRoutes from "./routes/landing-banner.route.js";
 import contactRouter from "./routes/contact.route.js";
 import contactUsRoutes from "./routes/contact-us.route.js";
 import newsRoutes from "./routes/news.route.js";
+import notifictiaonRoutes from "./routes/notification.route.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -40,6 +41,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/contact-us", contactUsRoutes);
 app.use("/api/contact", contactRouter);
 app.use("/api/news", newsRoutes);
+app.use("/api/notification", notifictiaonRoutes);
 
 app.get("/", (req, res) => {
   res.send("api url:  http://localhost:5050/api");
