@@ -2,6 +2,7 @@ import Contact from "../models/contact.model.js";
 import { deleteFile } from "../utils/delete-file.js";
 
 export async function addContact(req, res) {
+  console.log(req?.body);
   const { name, detail, description, is_deactivated } = req?.body;
   const filename = req?.file?.filename;
 

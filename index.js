@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import categoryRoutes from "./routes/category.route.js";
 import landingBannerRoutes from "./routes/landing-banner.route.js";
 import contactRouter from "./routes/contact.route.js";
+import contactUsRoutes from "./routes/contact-us.route.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -35,6 +36,7 @@ app.use(express.static("uploads"));
 
 app.use("/api/banner", landingBannerRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/contact-us", contactUsRoutes);
 app.use("/api/contact", contactRouter);
 
 app.get("/", (req, res) => {
