@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 // routes
 import categoryRoutes from "./routes/category.route.js";
+import landingBannerRoutes from "./routes/landing-banner.route.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -31,6 +32,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use(express.static("uploads"));
 
+app.use("/api/banner", landingBannerRoutes);
 app.use("/api/category", categoryRoutes);
 
 app.get("/", (req, res) => {

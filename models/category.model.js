@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const categorySchema = mongoose.Schema(
+const categorySchema = new mongoose.Schema(
   {
     icon_url: {
       type: String,
