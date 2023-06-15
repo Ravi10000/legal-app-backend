@@ -15,6 +15,7 @@ import serviceRoutes from "./routes/service.route.js";
 import newsImageRoutes from "./routes/news-image.route.js";
 import reviewRoutes from "./routes/review.route.js";
 import serviceRequestRoutes from "./routes/service-request.route.js";
+import statisticRoutes from "./routes/statistic.route.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -52,6 +53,7 @@ app.use("/api/service", serviceRoutes);
 app.use("/api/news-image", newsImageRoutes);
 app.use("/api/review", reviewRoutes);
 app.use("/api/service-request", serviceRequestRoutes);
+app.use("/api/statistic", statisticRoutes);
 
 app.get("/", (req, res) => {
   res.send("api url:  http://localhost:5050/api");
