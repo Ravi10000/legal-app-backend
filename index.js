@@ -12,6 +12,7 @@ import newsRoutes from "./routes/news.route.js";
 import notifictiaonRoutes from "./routes/notification.route.js";
 import authRoutes from "./routes/auth.route.js";
 import serviceRoutes from "./routes/service.route.js";
+import newsImageRoutes from "./routes/news-image.route.js";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -46,6 +47,7 @@ app.use("/api/news", newsRoutes);
 app.use("/api/notification", notifictiaonRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/service", serviceRoutes);
+app.use("/api/news-image", newsImageRoutes);
 
 app.get("/", (req, res) => {
   res.send("api url:  http://localhost:5050/api");

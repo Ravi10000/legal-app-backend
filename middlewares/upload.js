@@ -10,13 +10,7 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname +
-        "-" +
-        Date.now() +
-        path.extname(file.originalname).toLowerCase()
-    );
+    cb(null, Date.now() + "-" + file.originalname);
   },
   // fileFilter: (req, file, cb) => {
   //   const filetype = file.mimetype;
