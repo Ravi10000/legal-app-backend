@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import Verification from "../models/verification.model.js";
+import PasswordChangeRequest from "../models/password-change-request.model.js";
 
 export async function signupUser(req, res) {
   const { email, password, confirmPassword, name, phoneNumber } = req.body;
@@ -199,6 +200,102 @@ export async function signInUser(req, res) {
         email: user.email,
         name: user.name,
         usertype: user.usertype,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export async function requestResetPassword(req, res) {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({
+      status: "error",
+      message: "required fields: email",
+    });
+  }
+  try {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(400).json({
+        status: "error",
+        message: "User Not Found",
+      });
+    }
+    const passwordChangeRequest = await PasswordChangeRequest.create({ user });
+    // frontend verification page link -> trigger api call to backend verification api
+    const passwordChangeLink = `${process.env.CLIENT_URL}/reset-password/${passwordChangeRequest._id}`;
+    // send reset password email
+    console.log({ passwordChangeLink });
+
+    res.status(200).json({
+      status: "success",
+      message: "Reset Password Link Sent",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+}
+
+export async function resetPassword(req, res) {
+  const { requestId, password, confirmPassword } = req.body;
+  if (!requestId || !password || !confirmPassword) {
+    return res.status(400).json({
+      status: "error",
+      message: "required fields: requestId, password, confirmPassword",
+    });
+  }
+  if (password !== confirmPassword) {
+    return res.status(400).json({
+      status: "error",
+      message: "password and confirm password should be same",
+    });
+  }
+
+  try {
+    const changePasswordRequest = await PasswordChangeRequest.findById(
+      requestId
+    );
+    if (!changePasswordRequest) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid Request Id",
+      });
+    }
+    const isLinkExpired =
+      Date.now().valueOf() - changePasswordRequest.createdAt.valueOf() >
+      1000 * 60 * 10;
+
+    if (isLinkExpired) {
+      return res.status(400).json({
+        status: "error",
+        message: "Link Expired",
+      });
+    }
+    const hash = await bcrypt.hash(password, 10);
+    const authToken = jwt.sign(
+      { _id: changePasswordRequest.user },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+    const user = await User.findByIdAndUpdate(
+      changePasswordRequest?.user,
+      { hash },
+      { new: true }
+    );
+    res.status(200).json({
+      status: "success",
+      message: "Password Changed Successfully",
+      user: {
+        authToken,
+        _id: user?._id,
+        email: user?.email,
+        name: user?.name,
+        usertype: user?.usertype,
+        phoneNumber: user?.phoneNumber,
       },
     });
   } catch (err) {

@@ -1,6 +1,8 @@
 import express from "express";
 import {
+  requestResetPassword,
   resendVerificationEmail,
+  resetPassword,
   signInUser,
   signupUser,
   verifyEmail,
@@ -13,5 +15,8 @@ router.post("/signin", signInUser);
 
 router.get("/verify/:verificationId", verifyEmail);
 router.get("/send-link/:verificationId", resendVerificationEmail);
+
+router.post("/forgot-password", requestResetPassword);
+router.put("/reset-password", resetPassword);
 
 export default router;
