@@ -20,8 +20,8 @@ const UserSchema = mongoose.Schema(
     },
     usertype: {
       type: String,
-      enum: ["ADMIN", "VENDOR", "CUSTOMER"],
-      default: "CUSTOMER",
+      enum: ["ADMIN", "VENDOR", "USER", "EXECUTIVE"],
+      default: "USER",
     },
     name: String,
     phoneNumber: String,
