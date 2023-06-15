@@ -7,6 +7,7 @@ export async function addCategory(req, res) {
   if (!name || !description || !filename) {
     if (filename) deleteFile(filename);
     return res.status(400).json({
+      status: "error",
       message:
         "required fields: name, description, icon, One of more fields are missing",
     });
@@ -46,20 +47,23 @@ export async function getAllCategories(req, res) {
 export async function getCategoryById(req, res) {
   const { categoryId } = req?.params;
   if (!categoryId) {
-    return res.status(400).json({ message: "categoryId is missing" });
+    return res
+      .status(400)
+      .json({ status: "error", message: "categoryId is missing" });
   }
   try {
     const category = await Category.findById(categoryId);
     if (!category) {
-      return res
-        .status(404)
-        .json({ message: "invalid categoryId, category not found" });
+      return res.status(404).json({
+        status: "error",
+        message: "invalid categoryId, category not found",
+      });
     }
 
     return res.status(200).json({ status: "success", category });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "internal server error" });
+    res.status(500).json({ status: "error", message: "internal server error" });
   }
 }
 
@@ -67,7 +71,7 @@ export async function updateCatgory(req, res) {
   try {
     if (!req?.body?.categoryId) {
       if (req?.file?.filename) deleteFile(req?.file?.filename);
-      return res.status(400).json({ message: "categoryId is missing" });
+      return res.status(400).json({status: "error", message: "categoryId is missing" });
     }
     const categoryBody = {};
 
@@ -112,7 +116,7 @@ export async function deleteCategory(req, res) {
   try {
     const { categoryId } = req?.params;
     if (!categoryId) {
-      return res.status(400).json({ message: "categoryId is missing" });
+      return res.status(400).json({status: "error", message: "categoryId is missing" });
     }
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
     if (!deletedCategory) {
