@@ -21,6 +21,7 @@ import statisticRoutes from "./routes/statistic.route.js";
 import transcationRoutes from "./routes/transaction.route.js";
 import orderRoutes from "./routes/order.route.js";
 import userRoutes from "./routes/user.route.js";
+import vendorRoutes from "./routes/vendor.route.js";
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use("/api/transaction", transcationRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/vendor", vendorRoutes);
 
 app.get("/", (req, res) => {
   res.send("api url:  http://localhost:5050/api");
