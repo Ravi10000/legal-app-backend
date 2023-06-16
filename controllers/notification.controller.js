@@ -7,12 +7,12 @@ export async function addNotification(req, res) {
     !user ||
     !order ||
     !service ||
-    !(type === "Private" || type === "Public")
+    !(type === "PRIVATE" || type === "PUBLIC")
   ) {
     return res.status(400).json({
       status: "error",
       message:
-        "required fields: message, user, order, service, one or more fields are missing",
+        "required fields: message, user, order, service, type one or more fields are missing",
     });
   }
   try {

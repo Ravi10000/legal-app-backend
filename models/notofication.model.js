@@ -6,29 +6,26 @@ const notificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    is_read: {
+    isRead: {
       type: Boolean,
       default: false,
     },
     user: {
-      type: String,
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: "User",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     order: {
-      type: String,
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: "Order",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
     },
     service: {
-      type: String,
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: "Service",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service",
     },
     type: {
       type: String,
-      enum: ["Private", "Public"],
-      default: "Public",
+      enum: ["PRIVATE", "PUBLIC"],
+      required: true,
     },
   },
   { timestamps: true }
