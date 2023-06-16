@@ -5,7 +5,7 @@ import path from "path";
 async function sendEmail({ to, link }) {
   const transporter = createTransport({
     host: process.env.EMAIL_HOST,
-    port: 587,
+    port: process.env.EMAIL_PORT,
     auth: {
       user: process.env.EMAIL_USERNAME,
       pass: process.env.EMAIL_PASSWORD,
@@ -23,7 +23,7 @@ async function sendEmail({ to, link }) {
   transporter.use("compile", hbs(handlebarOptions));
 
   const mailOptions = {
-    from: `verify email <plagiarism-checker@gmail.com>`,
+    from: `verify email <TEST LEAGAL MAIL>`,
     to,
     subject: "Verify your email",
     template: "verify-email",
