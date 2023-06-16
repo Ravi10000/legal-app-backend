@@ -2,6 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 // routes
 import categoryRoutes from "./routes/category.route.js";
@@ -17,9 +19,7 @@ import reviewRoutes from "./routes/review.route.js";
 import serviceRequestRoutes from "./routes/service-request.route.js";
 import statisticRoutes from "./routes/statistic.route.js";
 import transcationRoutes from "./routes/transaction.route.js";
-
-import dotenv from "dotenv";
-dotenv.config();
+import orderRoutes from "./routes/order.route.js";
 
 const app = express();
 
@@ -56,6 +56,7 @@ app.use("/api/review", reviewRoutes);
 app.use("/api/service-request", serviceRequestRoutes);
 app.use("/api/statistic", statisticRoutes);
 app.use("/api/transaction", transcationRoutes);
+app.use("/api/order", orderRoutes);
 
 app.get("/", (req, res) => {
   res.send("api url:  http://localhost:5050/api");

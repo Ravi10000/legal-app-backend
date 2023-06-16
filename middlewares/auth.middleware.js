@@ -26,7 +26,7 @@ export const fetchUser = async (req, res, next) => {
   next();
 };
 
-export const isAdminMiddleware = async (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
   const user = req?.user;
   if (user?.usertype !== "ADMIN") {
     return res.status(401).json({ message: "Admin Access Denied" });
@@ -39,5 +39,11 @@ export async function isValidUser(req, res, next) {
   const user = await User.findById(req.user._id);
   if (!user) return res.status(401).json({ message: "Access Denied" });
   req.user = user;
+  next();
+}
+
+export async function checkIfAdmin(req, res, next) {
+  if (req.user.usertype === "ADMIN") req.user.isAdmin = true;
+  else req.user.isAdmin = false;
   next();
 }
