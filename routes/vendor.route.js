@@ -9,6 +9,7 @@ import {
   getAllVendors,
   getVendorById,
   updateVendorDetails,
+  uploadDocument,
 } from "../controllers/vendor.controller.js";
 import upload from "../middlewares/upload.js";
 
@@ -20,7 +21,7 @@ router.put(
   fetchUser,
   isValidUser,
   upload.single("document"),
-  updateVendorDetails
+  uploadDocument
 );
 router.put("/", fetchUser, isValidUser, updateVendorDetails);
 

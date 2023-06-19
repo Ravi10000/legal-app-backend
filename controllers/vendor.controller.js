@@ -1,5 +1,6 @@
 import Vendor from "../models/vendor.model.js";
 import User from "../models/user.model.js";
+import { deleteFile } from "../utils/delete-file.js";
 
 export async function addVendor(req, res) {
   const {
@@ -46,6 +47,13 @@ export async function addVendor(req, res) {
     expertServices,
   };
   try {
+    const existingVendor = await Vendor.findOne({ user: req.user._id });
+    if (existingVendor) {
+      return res.status(400).json({
+        status: "error",
+        message: "Vendor already exists",
+      });
+    }
     const vendor = await Vendor.create(vendorData);
     if (!vendor)
       return res.status(500).json({ status: "error", message: err.message });
@@ -115,11 +123,15 @@ export async function updateVendorDetails(req, res) {
   } = req.body;
 
   try {
-    const vendor = await Vendor.findOne({ user: req.user._id });
+    const vendor = await Vendor.findOne({
+      user: req.user._id,
+    });
+    console.log(vendor);
     if (!vendor) {
-      return res.status(500).json({ status: "error", message: err.message });
+      return res.status(500).json({ status: "error", message: "unauthorised" });
     }
-    const vendorData = {};
+
+    const vendorData = { ...vendor._doc };
     if (companyName) vendorData.companyName = companyName;
     if (expertServices) vendorData.expertServices = expertServices;
     if (mobile) vendorData.mobile = mobile;
@@ -146,7 +158,9 @@ export async function updateVendorDetails(req, res) {
       { new: true }
     );
     if (!updatedVendor) {
-      return res.status(500).json({ status: "error", message: err.message });
+      return res
+        .status(500)
+        .json({ status: "error", message: "invalid user id" });
     }
     res.status(200).json({ status: "success", updatedVendor });
   } catch (err) {
@@ -156,36 +170,51 @@ export async function updateVendorDetails(req, res) {
 }
 
 export async function uploadDocument(req, res) {
-  const { vendorId } = req.params;
-  const { documentType, documentName } = req.body;
-  const document = req.file;
+  const { documentName, value } = req.body;
+  const filename = req?.file?.filename;
 
-  if (!vendorId || !documentType || !documentName || !document) {
-    return res
-      .status(400)
-      .json({
+  if (documentName === "certificate validitity") {
+    if (!value) {
+      if (filename) deleteFile(filename);
+      return res.status(400).json({
         status: "error",
-        message:
-          "required fields: vendorId, documentType, documentName, document",
+        message: "required fields: value, documentName",
       });
+    }
+    const vendor = await Vendor.findOneAndUpdate(
+      { user: req.user._id },
+      {
+        [`documents.practiceCertificateValiditity`]: value,
+      }
+    );
+    if (!vendor) {
+      return res
+        .status(500)
+        .json({ status: "error", message: "Vendor not found" });
+    }
+    return res.status(200).json({ status: "success", vendor });
+  }
+  if (!documentName || !filename) {
+    if (filename) deleteFile(filename);
+    return res.status(400).json({
+      status: "error",
+      message: "required fields: document, documentName",
+    });
   }
 
   try {
-    const vendor = await Vendor.findById(vendorId);
+    const vendor = await Vendor.findOneAndUpdate(
+      { user: req.user._id },
+      {
+        [`documents.${documentName}`]: filename,
+      }
+    );
     if (!vendor) {
-      return res.status(500).json({ status: "error", message: err.message });
+      return res
+        .status(500)
+        .json({ status: "error", message: "Vendor not found" });
     }
-    const documentData = {
-      documentType,
-      documentName,
-      document: document.path,
-    };
-    vendor.documents.push(documentData);
-    const updatedVendor = await vendor.save();
-    if (!updatedVendor) {
-      return res.status(500).json({ status: "error", message: err.message });
-    }
-    res.status(200).json({ status: "success", updatedVendor });
+    res.status(200).json({ status: "success", vendor });
   } catch (err) {
     console.log(err);
     res.status(500).json({ status: "error", message: err.message });

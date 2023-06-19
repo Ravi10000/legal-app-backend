@@ -16,15 +16,15 @@ const bankInfoSchema = new mongoose.Schema({
 });
 
 const documentSchema = new mongoose.Schema({
-  aadhar: String,
-  agreement: String,
-  googleMap: String,
-  nameBoard: String,
-  pan: String,
-  passPhoto: String,
-  powerBill: String,
-  practiceCertificate: String,
-  practiceCertificateValiditity: Date,
+  aadhar: { type: String, default: "" },
+  agreement: { type: String, default: "" },
+  googleMap: { type: String, default: "" },
+  nameBoard: { type: String, default: "" },
+  pan: { type: String, default: "" },
+  passPhoto: { type: String, default: "" },
+  powerBill: { type: String, default: "" },
+  practiceCertificate: { type: String, default: "" },
+  practiceCertificateValiditity: { type: Date, default: null },
 });
 
 const associateDetailSchema = new mongoose.Schema({
@@ -58,18 +58,10 @@ const vendorSchema = new mongoose.Schema(
     qualificationDegree: String,
     qualificationUniversity: String,
     yearOfCompletion: Number,
-    bankInfo: {
-      type: bankInfoSchema,
-    },
-    documents: {
-      type: documentSchema,
-    },
-    associateDetails: {
-      type: associateDetailSchema,
-    },
-    workingHours: {
-      type: workingHourSchema,
-    },
+    bankInfo: bankInfoSchema,
+    documents: documentSchema,
+    associateDetails: associateDetailSchema,
+    workingHours: workingHourSchema,
   },
   { timestamps: true }
 );
