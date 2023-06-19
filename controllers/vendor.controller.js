@@ -84,17 +84,14 @@ export async function getAllVendors(req, res) {
 }
 
 export async function getVendorById(req, res) {
-  const { vendorId } = req.params;
-
-  if (!vendorId) {
-    return res
-      .status(400)
-      .json({ status: "error", message: "required fields: vendorId" });
-  }
   try {
-    const vendor = await Vendor.findById(vendorId).populate("user");
+    const vendor = await Vendor.findOne({ user: req.user._id }).populate(
+      "user"
+    );
     if (!vendor) {
-      return res.status(500).json({ status: "error", message: err.message });
+      return res
+        .status(500)
+        .json({ status: "error", message: "vendor not found" });
     }
     return res.status(200).json({ status: "success", vendor });
   } catch (err) {
@@ -215,6 +212,21 @@ export async function uploadDocument(req, res) {
         .json({ status: "error", message: "Vendor not found" });
     }
     res.status(200).json({ status: "success", vendor });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error", message: err.message });
+  }
+}
+
+export async function deleteVendor(req, res) {
+  const deletedVendor = await Vendor.findOneAndDelete({ user: req.user._id });
+  if (!deletedVendor) {
+    return res
+      .status(500)
+      .json({ status: "error", message: "invalid request" });
+  }
+  res.status(200).json({ status: "success", deletedVendor });
+  try {
   } catch (err) {
     console.log(err);
     res.status(500).json({ status: "error", message: err.message });

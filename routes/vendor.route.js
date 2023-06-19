@@ -1,11 +1,13 @@
 import express from "express";
 import {
+  checkIfAdmin,
   fetchUser,
   isAdmin,
   isValidUser,
 } from "../middlewares/auth.middleware.js";
 import {
   addVendor,
+  deleteVendor,
   getAllVendors,
   getVendorById,
   updateVendorDetails,
@@ -25,7 +27,9 @@ router.put(
 );
 router.put("/", fetchUser, isValidUser, updateVendorDetails);
 
-router.get("/:vendorId", fetchUser, isValidUser, getVendorById);
+router.get("/me", fetchUser, isValidUser, getVendorById);
 router.get("/", fetchUser, isValidUser, isAdmin, getAllVendors);
+
+router.delete("/", fetchUser, isValidUser, deleteVendor);
 
 export default router;
