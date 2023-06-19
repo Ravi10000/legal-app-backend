@@ -89,3 +89,32 @@ export async function updateVendorServices(req, res) {
     res.status(500).json({ status: "error", message: err.message });
   }
 }
+
+export async function deleteVendorServices(req, res) {
+  const { vendorServiceId } = req.params;
+  if (!vendorServiceId) {
+    return res.status(400).json({
+      status: "error",
+      message: "vendorServiceId is required",
+    });
+  }
+  try {
+    const vendor = await Vendor.findOneAndDelete({
+      user: req.user._id,
+      _id: vendorServiceId,
+    });
+    if (!vendor) {
+      return res.status(404).json({
+        status: "error",
+        message: "Vendor Service not found or unauthorized",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "Vendor Service deleted successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ status: "error", message: err.message });
+  }
+}
