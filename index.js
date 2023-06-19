@@ -22,6 +22,7 @@ import transcationRoutes from "./routes/transaction.route.js";
 import orderRoutes from "./routes/order.route.js";
 import userRoutes from "./routes/user.route.js";
 import vendorRoutes from "./routes/vendor.route.js";
+import vendorServiceRoutes from "./routes/vendor-service.route.js";
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use("/api/order", orderRoutes);
 app.use("/api/notification", notificationRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/vendor", vendorRoutes);
+app.use("/api/vendor-service", vendorServiceRoutes);
 
 app.get("/", (req, res) => {
   res.send("api url:  http://localhost:5050/api");
