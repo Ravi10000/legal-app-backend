@@ -5,7 +5,8 @@ import Verification from "../models/verification.model.js";
 import PasswordChangeRequest from "../models/password-change-request.model.js";
 
 export async function signupUser(req, res) {
-  const { email, password, confirmPassword, name, phoneNumber,usertype } = req.body;
+  const { email, password, confirmPassword, name, phoneNumber, usertype } =
+    req.body;
   if (!email || !password || !confirmPassword || !name || !phoneNumber) {
     return res.status(400).json({
       status: "error",
@@ -30,7 +31,8 @@ export async function signupUser(req, res) {
       email: email.toLowerCase(),
       hash,
       name,
-      phoneNumber,usertype
+      phoneNumber,
+      usertype,
     });
 
     const verification = await Verification.create({
@@ -185,20 +187,20 @@ export async function signInUser(req, res) {
         message: "Wrong Password",
       });
     }
-    if (!user.isVerified) {
-      const verification = await Verification.create({
-        user: user._id,
-      });
-      // frontend verification page link -> trigger api call to backend verification api
-      const verificationLink = `${process.env.CLIENT_URL}/verify/${verification._id}`;
-      console.log({ verificationLink });
-      // send verification email
+    // if (!user.isVerified) {
+    //   const verification = await Verification.create({
+    //     user: user._id,
+    //   });
+    //   // frontend verification page link -> trigger api call to backend verification api
+    //   const verificationLink = `${process.env.CLIENT_URL}/verify/${verification._id}`;
+    //   console.log({ verificationLink });
+    //   // send verification email
 
-      return res.status(200).json({
-        status: "success",
-        message: "Verification Pending",
-      });
-    }
+    //   return res.status(200).json({
+    //     status: "success",
+    //     message: "Verification Pending",
+    //   });
+    // }
     const authToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
@@ -211,6 +213,8 @@ export async function signInUser(req, res) {
         email: user.email,
         name: user.name,
         usertype: user.usertype,
+        phoneNumber: user.phoneNumber,
+        isVerified: user.isVerified,
       },
     });
   } catch (err) {
