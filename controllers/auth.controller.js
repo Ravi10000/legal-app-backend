@@ -5,7 +5,7 @@ import Verification from "../models/verification.model.js";
 import PasswordChangeRequest from "../models/password-change-request.model.js";
 
 export async function signupUser(req, res) {
-  const { email, password, confirmPassword, name, phoneNumber } = req.body;
+  const { email, password, confirmPassword, name, phoneNumber,usertype } = req.body;
   if (!email || !password || !confirmPassword || !name || !phoneNumber) {
     return res.status(400).json({
       status: "error",
@@ -30,7 +30,7 @@ export async function signupUser(req, res) {
       email: email.toLowerCase(),
       hash,
       name,
-      phoneNumber,
+      phoneNumber,usertype
     });
 
     const verification = await Verification.create({
