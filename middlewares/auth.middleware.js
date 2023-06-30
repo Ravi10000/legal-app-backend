@@ -17,7 +17,14 @@ export const fetchUser = async (req, res, next) => {
         req.user = null;
         return next();
       }
-      const user = jwt.verify(token, process.env.JWT_SECRET);
+      let user = null;
+      try {
+        user = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (err) {
+        console.log(err);
+        req.user = null;
+        return next();
+      }
       req.user = user;
       console.log("user fetched successfully");
       console.log({ user });

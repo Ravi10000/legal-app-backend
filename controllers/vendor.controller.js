@@ -3,49 +3,49 @@ import User from "../models/user.model.js";
 import { deleteFile } from "../utils/delete-file.js";
 
 export async function addVendor(req, res) {
-  const {
-    companyName,
-    mobile,
-    landline,
-    ifsc,
-    accountNumber,
-    startingHour,
-    endingHour,
-    expertServices,
-  } = req.body;
+  // const {
+  //   companyName,
+  //   mobile,
+  //   landline,
+  //   ifsc,
+  //   accountNumber,
+  //   startingHour,
+  //   endingHour,
+  //   expertServices,
+  // } = req.body;
 
-  if (
-    !companyName ||
-    !mobile ||
-    !landline ||
-    !ifsc ||
-    !accountNumber ||
-    !startingHour ||
-    !endingHour ||
-    !expertServices
-  ) {
-    return res.status(400).json({
-      status: "error",
-      message:
-        "required fields: companyName, mobile, landline, ifsc, accountNumber, startingHour, endingHour, expertServices ",
-    });
-  }
+  // if (
+  //   !companyName ||
+  //   !mobile ||
+  //   !landline ||
+  //   !ifsc ||
+  //   !accountNumber ||
+  //   !startingHour ||
+  //   !endingHour ||
+  //   !expertServices
+  // ) {
+  //   return res.status(400).json({
+  //     status: "error",
+  //     message:
+  //       "required fields: companyName, mobile, landline, ifsc, accountNumber, startingHour, endingHour, expertServices ",
+  //   });
+  // }
 
-  const vendorData = {
-    user: req.user._id,
-    companyName,
-    bankInfo: {
-      ifsc,
-      accountNumber,
-    },
-    workingHours: {
-      startingHour,
-      endingHour,
-    },
-    mobile,
-    landline,
-    expertServices,
-  };
+  // const vendorData = {
+  //   user: req.user._id,
+  //   companyName,
+  //   bankInfo: {
+  //     ifsc,
+  //     accountNumber,
+  //   },
+  //   workingHours: {
+  //     startingHour,
+  //     endingHour,
+  //   },
+  //   mobile,
+  //   landline,
+  //   expertServices,
+  // };
   try {
     const existingVendor = await Vendor.findOne({ user: req.user._id });
     if (existingVendor) {
@@ -54,16 +54,16 @@ export async function addVendor(req, res) {
         message: "Vendor already exists",
       });
     }
-    const vendor = await Vendor.create(vendorData);
+    const vendor = await Vendor.create({ user: req.user._id });
     if (!vendor)
       return res.status(500).json({ status: "error", message: err.message });
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { usertype: "VENDOR" },
-      { new: true }
-    );
-    return res.status(201).json({ status: "success", vendor, user });
+    // const user = await User.findByIdAndUpdate(
+    //   req.user._id,
+    //   { usertype: "VENDOR" },
+    //   { new: true }
+    // );
+    return res.status(201).json({ status: "success", vendor });
   } catch (err) {
     console.log(err);
     res.status(500).json({ status: "error", message: err.message });
@@ -117,6 +117,9 @@ export async function updateVendorDetails(req, res) {
     otherQualificationUniversity,
     permanentAddress,
     practiceExperience,
+    associateName,
+    associateAddress,
+    associatePermanentAddress,
   } = req.body;
 
   try {
@@ -148,6 +151,10 @@ export async function updateVendorDetails(req, res) {
       vendorData.otherQualificationUniversity = otherQualificationUniversity;
     if (permanentAddress) vendorData.permanentAddress = permanentAddress;
     if (practiceExperience) vendorData.practiceExperience = practiceExperience;
+    if (associateName) vendorData.associate.name = associateName;
+    if (associateAddress) vendorData.associate.address = associateAddress;
+    if (associatePermanentAddress)
+      vendorData.associate.permanentAddress = associatePermanentAddress;
 
     const updatedVendor = await Vendor.findByIdAndUpdate(
       vendor._id,
