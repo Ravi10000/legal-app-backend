@@ -42,9 +42,20 @@ export async function signupUser(req, res) {
     // send verification email
     console.log({ verificationLink });
 
+    const authToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     return res.status(201).json({
       status: "success",
       message: "Verification Email Sent",
+      authToken,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        usertype: user.usertype,
+        phoneNumber: user.phoneNumber,
+      },
     });
   } catch (err) {
     console.log(err);
