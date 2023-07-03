@@ -151,10 +151,11 @@ export async function updateVendorDetails(req, res) {
       vendorData.otherQualificationUniversity = otherQualificationUniversity;
     if (permanentAddress) vendorData.permanentAddress = permanentAddress;
     if (practiceExperience) vendorData.practiceExperience = practiceExperience;
-    if (associateName) vendorData.associate.name = associateName;
-    if (associateAddress) vendorData.associate.address = associateAddress;
+    if (associateName) vendorData.associateDetails.name = associateName;
+    if (associateAddress)
+      vendorData.associateDetails.address = associateAddress;
     if (associatePermanentAddress)
-      vendorData.associate.permanentAddress = associatePermanentAddress;
+      vendorData.associateDetails.permanentAddress = associatePermanentAddress;
 
     const updatedVendor = await Vendor.findByIdAndUpdate(
       vendor._id,
@@ -176,6 +177,7 @@ export async function updateVendorDetails(req, res) {
 export async function uploadDocument(req, res) {
   const { documentName, value } = req.body;
   const filename = req?.file?.filename;
+  console.log({ documentName, filename });
 
   if (documentName === "certificate validitity") {
     if (!value) {
@@ -211,6 +213,9 @@ export async function uploadDocument(req, res) {
       { user: req.user._id },
       {
         [`documents.${documentName}`]: filename,
+      },
+      {
+        new: true,
       }
     );
     if (!vendor) {

@@ -42,8 +42,8 @@ const associateDetailSchema = new mongoose.Schema({
 });
 
 const workingHourSchema = new mongoose.Schema({
-  startingHour: { type: Number, default: -1 },
-  endingHour: { type: Number, default: -1 },
+  startingHour: { type: String, default: -1 },
+  endingHour: { type: String, default: -1 },
 });
 
 const vendorSchema = new mongoose.Schema(
@@ -118,8 +118,8 @@ const vendorSchema = new mongoose.Schema(
     associateDetails: {
       type: associateDetailSchema,
       default: {
-        address: "NOT AVAILABLE",
         name: "NOT AVAILABLE",
+        address: "NOT AVAILABLE",
         permanentAddress: "NOT AVAILABLE",
       },
     },
