@@ -3,14 +3,10 @@ import mongoose from "mongoose";
 const bankInfoSchema = new mongoose.Schema({
   accountNumber: {
     type: String,
-    minLength: 9,
-    maxLength: 18,
     default: "NOT AVAILABLE",
   },
   ifsc: {
     type: String,
-    maxLength: 11,
-    minLength: 11,
     default: "NOT AVAILABLE",
   },
 });
@@ -44,6 +40,7 @@ const associateDetailSchema = new mongoose.Schema({
     default: "NOT AVAILABLE",
   },
 });
+
 const workingHourSchema = new mongoose.Schema({
   startingHour: { type: Number, default: -1 },
   endingHour: { type: Number, default: -1 },
@@ -100,10 +97,36 @@ const vendorSchema = new mongoose.Schema(
       type: Number,
       default: -1,
     },
-    bankInfo: bankInfoSchema,
-    documents: documentSchema,
-    associateDetails: associateDetailSchema,
-    workingHours: workingHourSchema,
+    bankInfo: {
+      type: bankInfoSchema,
+      default: { ifsc: "NOT AVAILABLE", accountNumber: "NOT AVAILABLE" },
+    },
+    documents: {
+      type: documentSchema,
+      default: {
+        aadhar: "NOT AVAILABLE",
+        agreement: "NOT AVAILABLE",
+        googleMap: "NOT AVAILABLE",
+        nameBoard: "NOT AVAILABLE",
+        pan: "NOT AVAILABLE",
+        passPhoto: "NOT AVAILABLE",
+        powerBill: "NOT AVAILABLE",
+        practiceCertificate: "NOT AVAILABLE",
+        practiceCertificateValiditity: "1970-01-01T00:00:00.000Z",
+      },
+    },
+    associateDetails: {
+      type: associateDetailSchema,
+      default: {
+        address: "NOT AVAILABLE",
+        name: "NOT AVAILABLE",
+        permanentAddress: "NOT AVAILABLE",
+      },
+    },
+    workingHours: {
+      type: workingHourSchema,
+      default: { startingHour: -1, endingHour: -1 },
+    },
   },
   { timestamps: true }
 );
