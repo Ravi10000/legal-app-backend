@@ -21,7 +21,7 @@ export const fetchUser = async (req, res, next) => {
       try {
         user = jwt.verify(token, process.env.JWT_SECRET);
       } catch (err) {
-        console.log(err);
+        console.log(err?.message);
         req.user = null;
         return next();
       }

@@ -177,6 +177,7 @@ export async function updateVendorDetails(req, res) {
 export async function uploadDocument(req, res) {
   const { documentName, value } = req.body;
   const filename = req?.file?.filename;
+  console.log(req?.file);
   console.log({ documentName, filename });
 
   if (documentName === "certificate validitity") {
