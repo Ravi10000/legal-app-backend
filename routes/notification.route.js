@@ -16,7 +16,7 @@ const router = express.Router();
 router.post("/", fetchUser, isValidUser, addNotification);
 router.put("/", fetchUser, isValidUser, updateNotificationStatus);
 
-router.get("/", fetchUser, isValidUser, checkIfAdmin, getAllNotifications);
+router.get("/", fetchUser, isValidUser, getAllNotifications);
 
 router.delete(
   "/:notificationId",
