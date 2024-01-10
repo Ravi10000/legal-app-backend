@@ -23,10 +23,13 @@ import orderRoutes from "./routes/order.route.js";
 import userRoutes from "./routes/user.route.js";
 import vendorRoutes from "./routes/vendor.route.js";
 import vendorServiceRoutes from "./routes/vendor-service.route.js";
+import { getIP } from "./utils/get-ip.js";
+import { sendSlackMessage } from "./utils/send-slack.js";
 
 const app = express();
 
 const DB_URL = process.env.DB_URL;
+// const DB_URL = "mongodb://127.0.0.1:27017/legal-app";
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -64,12 +67,21 @@ app.use("/api/user", userRoutes);
 app.use("/api/vendor", vendorRoutes);
 app.use("/api/vendor-service", vendorServiceRoutes);
 
-app.get("/", (req, res) => {
-  res.send("api url:  http://localhost:5050/api");
+app.get(["/", "/api"], (req, res) => {
+  const response = {
+    status: "success",
+    message: "welcome to legal API🚀",
+    serverUrl: `http://${getIP()}:${process.env.PORT}`,
+    assestsUrl: `http://${getIP()}:${process.env.PORT}`,
+    APIUrl: `http://${getIP()}:${process.env.PORT}/api`,
+  };
+  res.json(response);
 });
 
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
-  console.log("Server Url: http://localhost:5050");
+  console.log("Local URL: http://localhost:5050");
+  console.log("Server URL: http://" + getIP() + ":5050");
+  if (process.env.NODE_ENV !== "production") sendSlackMessage();
 });

@@ -23,9 +23,9 @@ const UserSchema = mongoose.Schema(
       enum: ["ADMIN", "VENDOR", "USER", "EXECUTIVE"],
       default: "USER",
     },
-    name: String,
-    phoneNumber: String,
-    profilePic: String,
+    name: { type: String, default: null },
+    phoneNumber: { type: String, default: null },
+    profilePic: { type: String, default: null },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

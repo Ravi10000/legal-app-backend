@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../models/user.model.js";
 import Verification from "../models/verification.model.js";
 import PasswordChangeRequest from "../models/password-change-request.model.js";
+import Vendor from "../models/vendor.model.js";
 
 export async function signupUser(req, res) {
   const { email, password, confirmPassword, name, phoneNumber, usertype } =
@@ -34,7 +35,10 @@ export async function signupUser(req, res) {
       phoneNumber,
       usertype,
     });
-
+    if (usertype === "VENDOR") {
+      const vendor = await Vendor.create({ user: user._id });
+      console.log({ vendor });
+    }
     const verification = await Verification.create({
       user: user._id,
     });

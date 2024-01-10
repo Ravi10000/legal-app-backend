@@ -41,6 +41,7 @@ import User from "../models/user.model.js";
 export const fetchUser = async (req, res, next) => {
   req.user = null;
   if (req?.headers?.authorization) {
+    console.log(req?.headers?.authorization);
     try {
       const token = req.headers.authorization.split(" ")[1];
       if (token == "null" || !token) {
@@ -48,6 +49,7 @@ export const fetchUser = async (req, res, next) => {
 
         return next();
       }
+      console.log({ token });
 
       const jwtExpiry = jwt.decode(token).exp;
       const now = Date.now() / 1000;
@@ -83,6 +85,7 @@ export const isAdmin = async (req, res, next) => {
 export async function isValidUser(req, res, next) {
   if (!req.user) return res.status(401).json({ message: "Access Denied" });
   const user = await User.findById(req.user._id);
+  console.log({ user });
   if (!user) return res.status(401).json({ message: "Access Denied" });
   req.user = user;
   next();

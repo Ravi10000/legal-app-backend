@@ -39,12 +39,13 @@ const orderSchema = new mongoose.Schema(
       type: String,
       enum: [
         "ACCEPTED",
+        "PENDING",
         "REJECTED",
         "ASSIGNED_TO_VENDOR",
         "COMPLETED_BY_VENDOR",
         "FINAL_COMPLETED",
       ],
-      default: "ACCEPTED",
+      default: "PENDING",
     },
     transaction: {
       type: mongoose.Schema.Types.ObjectId,

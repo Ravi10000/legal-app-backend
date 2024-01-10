@@ -9,6 +9,7 @@
     "dev": "nodemon index.js",
     "start": "node index.js",
     "push": "git push origin master",
+    "postpush": "git push github master",
     "pull": "git pull origin master"
   },
   "repository": {
@@ -23,6 +24,8 @@
   },
   "homepage": "https://gitlab.com/arpitasaxena555/legal-app-api#readme",
   "dependencies": {
+    "@slack/bolt": "^3.16.0",
+    "axios": "^1.6.2",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

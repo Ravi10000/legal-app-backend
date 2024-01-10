@@ -210,6 +210,7 @@ export async function uploadDocument(req, res) {
   }
 
   try {
+    console.log({ user: req.user._id });
     const vendor = await Vendor.findOneAndUpdate(
       { user: req.user._id },
       {
@@ -219,6 +220,7 @@ export async function uploadDocument(req, res) {
         new: true,
       }
     );
+    console.log({ vendor });
     if (!vendor) {
       return res
         .status(500)

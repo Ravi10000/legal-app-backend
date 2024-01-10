@@ -20,6 +20,7 @@ const documentSchema = new mongoose.Schema({
   passPhoto: { type: String, default: "NOT AVAILABLE" },
   powerBill: { type: String, default: "NOT AVAILABLE" },
   practiceCertificate: { type: String, default: "NOT AVAILABLE" },
+  profilePic: { type: String, default: "NOT AVAILABLE" },
   practiceCertificateValiditity: {
     type: Date,
     default: "1970-01-01T00:00:00.000Z",
@@ -112,6 +113,7 @@ const vendorSchema = new mongoose.Schema(
         passPhoto: "NOT AVAILABLE",
         powerBill: "NOT AVAILABLE",
         practiceCertificate: "NOT AVAILABLE",
+        profilePic: "NOT AVAILABLE",
         practiceCertificateValiditity: "1970-01-01T00:00:00.000Z",
       },
     },
