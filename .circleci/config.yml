@@ -13,6 +13,6 @@ workflows:
           filters:
             branches:
               only:
-                - prod
+                - master
 
 
