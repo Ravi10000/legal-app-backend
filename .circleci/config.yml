@@ -1,0 +1,19 @@
+version: 2.1
+jobs:
+  deploy:
+    docker:
+      - image: arvindr226/alpine-ssh
+    steps:
+      - run: ssh -o StrictHostKeyChecking=no -v ec2-user@$DNSLB "docker exec 3090801a5529 ./pull.sh"
+
+workflows:
+  deploy-to-ec2:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+
+#
+
