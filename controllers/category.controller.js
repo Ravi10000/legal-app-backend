@@ -71,7 +71,9 @@ export async function updateCatgory(req, res) {
   try {
     if (!req?.body?.categoryId) {
       if (req?.file?.filename) deleteFile(req?.file?.filename);
-      return res.status(400).json({status: "error", message: "categoryId is missing" });
+      return res
+        .status(400)
+        .json({ status: "error", message: "categoryId is missing" });
     }
     const categoryBody = {};
 
@@ -81,7 +83,7 @@ export async function updateCatgory(req, res) {
     if (req?.body?.description) {
       categoryBody.description = req?.body?.description;
     }
-    if (req?.body?.is_deactivated) {
+    if (typeof req?.body?.is_deactivated === "boolean") {
       categoryBody.is_deactivated = req?.body?.is_deactivated;
     }
     if (req?.file?.filename) {
@@ -116,7 +118,9 @@ export async function deleteCategory(req, res) {
   try {
     const { categoryId } = req?.params;
     if (!categoryId) {
-      return res.status(400).json({status: "error", message: "categoryId is missing" });
+      return res
+        .status(400)
+        .json({ status: "error", message: "categoryId is missing" });
     }
     const deletedCategory = await Category.findByIdAndDelete(categoryId);
     if (!deletedCategory) {
