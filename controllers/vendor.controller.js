@@ -120,12 +120,17 @@ export async function updateVendorDetails(req, res) {
     associateName,
     associateAddress,
     associatePermanentAddress,
+    userId,
   } = req.body;
 
   try {
+    const user = await User.findById(req.user._id);
+    const isAdmin = user.usertype === "ADMIN";
+
     const vendor = await Vendor.findOne({
-      user: req.user._id,
+      user: isAdmin ? userId : req.user._id,
     });
+
     console.log(vendor);
     if (!vendor) {
       return res.status(500).json({ status: "error", message: "unauthorised" });
