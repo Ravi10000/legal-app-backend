@@ -71,3 +71,46 @@ export async function deleteUser(req, res) {
     res.status(500).json({ status: "error", message: err.message });
   }
 }
+
+export async function updateUserDetails(req, res, next) {
+  try {
+    const { name, email, phoneNumber, is_deactivated, userId } = req.body;
+    const user = await User.findById(req.user._id);
+    const isAdmin = user.usertype === "ADMIN";
+    if (email !== user.email || phoneNumber !== user.phoneNumber) {
+      const query = [];
+      if (email !== user.email) query.push({ email });
+      if (phoneNumber !== user.phoneNumber) query.push({ phoneNumber });
+      const existingUser = await User.findOne({
+        $or: query,
+      });
+      if (existingUser) {
+        return res.status(400).json({
+          status: "error",
+          message: "Email or Phone Number already exists",
+        });
+      }
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      isAdmin ? userId : req.user._id,
+      {
+        ...(name && { name }),
+        ...(email && email !== user.email && { email }),
+        ...(phoneNumber && phoneNumber !== user.phoneNumber && { phoneNumber }),
+        ...(typeof is_deactivated === "boolean" && { is_deactivated }),
+      }
+    );
+    if (!updatedUser) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid userId",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "User Details Updated Successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+}
