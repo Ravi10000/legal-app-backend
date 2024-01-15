@@ -127,6 +127,12 @@ export async function updateVendorDetails(req, res) {
     const user = await User.findById(req.user._id);
     const isAdmin = user.usertype === "ADMIN";
 
+    if (isAdmin && !userId) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "required fields: userId" });
+    }
+
     const vendor = await Vendor.findOne({
       user: isAdmin ? userId : req.user._id,
     });

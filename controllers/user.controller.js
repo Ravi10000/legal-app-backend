@@ -75,12 +75,11 @@ export async function deleteUser(req, res) {
 export async function updateUserDetails(req, res, next) {
   try {
     const { name, email, phoneNumber, is_deactivated, userId } = req.body;
-    const user = await User.findById(req.user._id);
-    const isAdmin = user.usertype === "ADMIN";
-    if (email !== user.email || phoneNumber !== user.phoneNumber) {
+    const isAdmin = req.user.usertype === "ADMIN";
+    if (email !== req.user.email || phoneNumber !== req.user.phoneNumber) {
       const query = [];
-      if (email !== user.email) query.push({ email });
-      if (phoneNumber !== user.phoneNumber) query.push({ phoneNumber });
+      if (email !== req.user.email) query.push({ email });
+      if (phoneNumber !== req.user.phoneNumber) query.push({ phoneNumber });
       const existingUser = await User.findOne({
         $or: query,
       });
@@ -91,12 +90,18 @@ export async function updateUserDetails(req, res, next) {
         });
       }
     }
+    if (isAdmin && !userId)
+      return res
+        .status(400)
+        .json({ status: "error", message: "required fields: userId" });
+
     const updatedUser = await User.findByIdAndUpdate(
       isAdmin ? userId : req.user._id,
       {
         ...(name && { name }),
-        ...(email && email !== user.email && { email }),
-        ...(phoneNumber && phoneNumber !== user.phoneNumber && { phoneNumber }),
+        ...(email && email !== req.user.email && { email }),
+        ...(phoneNumber &&
+          phoneNumber !== req.user.phoneNumber && { phoneNumber }),
         ...(typeof is_deactivated === "boolean" && { is_deactivated }),
       }
     );
