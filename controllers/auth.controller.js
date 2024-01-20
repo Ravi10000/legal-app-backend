@@ -170,6 +170,8 @@ export async function resendVerificationEmail(req, res) {
 
 export async function signInUser(req, res) {
   const { email, password } = req.body;
+  console.log("signin----------");
+  console.log(req.body);
   if (!email || !password) {
     return res.status(400).json({
       status: "error",

@@ -54,6 +54,8 @@ export const fetchUser = async (req, res, next) => {
       const jwtExpiry = jwt.decode(token).exp;
       const now = Date.now() / 1000;
 
+      console.log({ jwtExpiry, now });
+
       if (jwtExpiry < now) {
         return res
           .status(401)

@@ -75,6 +75,8 @@ export async function deleteUser(req, res) {
 export async function updateUserDetails(req, res, next) {
   try {
     const { name, email, phoneNumber, is_deactivated, userId } = req.body;
+    console.log({ body: req.body });
+    console.log({ is_deactivated });
     const isAdmin = req.user.usertype === "ADMIN";
     if (email !== req.user.email || phoneNumber !== req.user.phoneNumber) {
       const query = [];
@@ -95,6 +97,7 @@ export async function updateUserDetails(req, res, next) {
         .status(400)
         .json({ status: "error", message: "required fields: userId" });
 
+    console.log({ type: typeof is_deactivated });
     const updatedUser = await User.findByIdAndUpdate(
       isAdmin ? userId : req.user._id,
       {
@@ -105,6 +108,7 @@ export async function updateUserDetails(req, res, next) {
         ...(typeof is_deactivated === "boolean" && { is_deactivated }),
       }
     );
+    console.log({ updatedUser });
     if (!updatedUser) {
       return res.status(400).json({
         status: "error",
