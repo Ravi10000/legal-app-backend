@@ -1,5 +1,4 @@
 import Service from "../models/service.model.js";
-import mongoose from "mongoose";
 
 export async function addService(req, res) {
   const {
@@ -20,7 +19,7 @@ export async function addService(req, res) {
         "required fields: title, description, ourPrice, marketPrice, category",
     });
   }
-  const createdBy = req?.user?._id || new mongoose.Types.ObjectId();
+  const createdBy = req?.user?._id;
   const serviceData = {
     title,
     description,

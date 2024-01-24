@@ -10,8 +10,7 @@ import {
 
 const router = express.Router();
 
-router.post("/", fetchUser, addService);
-// isValidUser,
+router.post("/", fetchUser, isValidUser, addService);
 router.put("/", fetchUser, isValidUser, updateService);
 
 router.get("/:serviceId", getServiceById);
