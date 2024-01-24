@@ -1,4 +1,5 @@
 import Service from "../models/service.model.js";
+import mongoose from "mongoose";
 
 export async function addService(req, res) {
   const {
@@ -19,7 +20,7 @@ export async function addService(req, res) {
         "required fields: title, description, ourPrice, marketPrice, category",
     });
   }
-  const createdBy = req.user._id;
+  const createdBy = req?.user?._id || new mongoose.Types.ObjectId();
   const serviceData = {
     title,
     description,
@@ -38,6 +39,11 @@ export async function addService(req, res) {
   try {
     const service = await Service.create(serviceData);
     if (!service) return res.status(400).json({ message: "Invalid Data" });
+    if (parentService && parentService?.length === 24) {
+      const _parentService = await Service.findByIdAndUpdate(parentService, {
+        $push: { childServices: service._id },
+      });
+    }
 
     return res.status(201).json({
       status: "success",

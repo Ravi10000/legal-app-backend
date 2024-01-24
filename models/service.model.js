@@ -23,12 +23,15 @@ const ServiceSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    childServices: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Service",
-      },
-    ],
+    childServices: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Service",
+        },
+      ],
+      default: [],
+    },
     parentService: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service",
