@@ -12,8 +12,14 @@ export async function addService(req, res) {
     parentService, //optional
   } = req.body;
 
-  if (!title || !description || !ourPrice || !marketPrice || !category) {
-    res.status(400).json({
+  if (
+    !title ||
+    !description ||
+    typeof ourPrice !== "number" ||
+    typeof marketPrice !== "number" ||
+    !category
+  ) {
+    return res.status(400).json({
       status: "error",
       message:
         "required fields: title, description, ourPrice, marketPrice, category",
@@ -126,8 +132,8 @@ export async function updateService(req, res) {
   if (title) serviceData.title = title;
   if (description) serviceData.description = description;
   if (category) serviceData.category = category;
-  if (marketPrice) serviceData.marketPrice = marketPrice;
-  if (ourPrice) serviceData.ourPrice = ourPrice;
+  if (typeof marketPrice !== "number") serviceData.marketPrice = marketPrice;
+  if (typeof ourPrice !== "number") serviceData.ourPrice = ourPrice;
   if (shortDescription) serviceData.shortDescription = shortDescription;
   if (childServices) serviceData.childServices = childServices;
   if (parentService) serviceData.parentService = parentService;
