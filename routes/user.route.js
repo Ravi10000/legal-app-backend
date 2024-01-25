@@ -11,10 +11,17 @@ import {
   deleteUser,
   updateUserDetails,
 } from "../controllers/user.controller.js";
+import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 router.get("/update", (req, res) => res.send("working"));
-router.put("/update", fetchUser, isValidUser, updateUserDetails);
+router.put(
+  "/update",
+  fetchUser,
+  isValidUser,
+  upload.single("profilePic"),
+  updateUserDetails
+);
 // router.put("/udpate", fetchUser, isValidUser, updateUserDetails);
 router.get("/me", fetchUser, isValidUser, getUserDetails);
 router.get("/:userId", fetchUser, isValidUser, isAdmin, getUserById);
