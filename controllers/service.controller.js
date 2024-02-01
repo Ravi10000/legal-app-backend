@@ -167,6 +167,9 @@ export async function deleteService(req, res) {
       .json({ status: "error", message: "serviceId is missing" });
   }
   try {
+    await Service.deleteMany({
+      parentService: serviceId,
+    });
     const service = await Service.findByIdAndDelete(serviceId);
     if (!service) {
       return res.status(404).json({

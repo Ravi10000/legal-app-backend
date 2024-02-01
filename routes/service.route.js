@@ -16,5 +16,6 @@ router.put("/", fetchUser, isValidUser, updateService);
 router.get("/:serviceId", getServiceById);
 router.get("/", getAllServices);
 
-router.delete("/:serviceId", fetchUser, isValidUser, deleteService);
+// fetchUser, isValidUser,
+router.delete("/:serviceId",  deleteService);
 export default router;
