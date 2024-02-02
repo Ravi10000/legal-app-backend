@@ -1,4 +1,5 @@
 import Category from "../models/category.model.js";
+import Service from "../models/service.model.js";
 import { deleteFile } from "../utils/delete-file.js";
 
 export async function addCategory(req, res) {
@@ -69,6 +70,7 @@ export async function getCategoryById(req, res) {
 
 export async function updateCatgory(req, res) {
   try {
+    console.log({ body: req.body });
     if (!req?.body?.categoryId) {
       if (req?.file?.filename) deleteFile(req?.file?.filename);
       return res
@@ -83,8 +85,17 @@ export async function updateCatgory(req, res) {
     if (req?.body?.description) {
       categoryBody.description = req?.body?.description;
     }
-    if (typeof req?.body?.is_deactivated === "boolean") {
-      categoryBody.is_deactivated = req?.body?.is_deactivated;
+    if (
+      typeof req?.body?.is_deactivated === "boolean" ||
+      req?.body?.is_deactivated === "false" ||
+      req?.body?.is_deactivated === "true"
+    ) {
+      if (typeof req?.body?.is_deactivated === "boolean") {
+        categoryBody.is_deactivated = req?.body?.is_deactivated;
+      } else {
+        categoryBody.is_deactivated =
+          req?.body?.is_deactivated === "true" ? true : false;
+      }
     }
     if (req?.file?.filename) {
       categoryBody.icon_url = req?.file?.filename;
@@ -103,8 +114,11 @@ export async function updateCatgory(req, res) {
       categoryBody,
       { new: true }
     );
+    console.log({ updatedCategory });
 
-    deleteFile(catgory?.icon_url);
+    if (req?.file?.filename) {
+      deleteFile(catgory?.icon_url);
+    }
     return res
       .status(200)
       .json({ status: "success", category: updatedCategory });
@@ -129,6 +143,14 @@ export async function deleteCategory(req, res) {
         .json({ message: "invalid categoryId, category not found" });
     }
     deleteFile(deletedCategory?.icon_url);
+    const servicesToDelete = await Service.find({ category: categoryId });
+
+    const deletedServices = await Promise.all(
+      servicesToDelete.map(async (service) => {
+        await Service.deleteMany({ parentService: service._id });
+      })
+    );
+    await Service.deleteMany({ category: categoryId });
 
     return res
       .status(200)
