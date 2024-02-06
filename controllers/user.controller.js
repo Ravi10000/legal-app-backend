@@ -77,7 +77,7 @@ export async function updateUserDetails(req, res, next) {
     const { name, email, phoneNumber, is_deactivated, userId } = req.body;
     console.log({ body: req.body });
     console.log({ is_deactivated });
-    const profilePic = req?.file;
+    const profilePic = req?.file?.filename;
     const isAdmin = req.user.usertype === "ADMIN";
     if (email !== req.user.email || phoneNumber !== req.user.phoneNumber) {
       const query = [];
