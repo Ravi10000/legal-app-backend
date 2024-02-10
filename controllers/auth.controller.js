@@ -4,6 +4,7 @@ import User from "../models/user.model.js";
 import Verification from "../models/verification.model.js";
 import PasswordChangeRequest from "../models/password-change-request.model.js";
 import Vendor from "../models/vendor.model.js";
+import { sendResetPasswordMail } from "../utils/emailer.js";
 
 export async function signupUser(req, res) {
   const { email, password, confirmPassword, name, phoneNumber, usertype } =
@@ -251,6 +252,10 @@ export async function requestResetPassword(req, res) {
     const passwordChangeLink = `${process.env.CLIENT_URL}/reset-password/${passwordChangeRequest._id}`;
     // send reset password email
     console.log({ passwordChangeLink });
+    await sendResetPasswordMail({
+      to: email,
+      link: passwordChangeLink,
+    });
 
     res.status(200).json({
       status: "success",
