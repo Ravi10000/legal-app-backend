@@ -246,6 +246,7 @@ export async function requestResetPassword(req, res) {
       });
     }
     const passwordChangeRequest = await PasswordChangeRequest.create({ user });
+    console.log({ passwordChangeRequest });
     // frontend verification page link -> trigger api call to backend verification api
     const passwordChangeLink = `${process.env.CLIENT_URL}/reset-password/${passwordChangeRequest._id}`;
     // send reset password email
@@ -254,6 +255,8 @@ export async function requestResetPassword(req, res) {
     res.status(200).json({
       status: "success",
       message: "Reset Password Link Sent",
+      // TODO: remove passwordChangeRequest._id from response
+      _requestId: passwordChangeRequest._id,
     });
   } catch (err) {
     console.log(err);
@@ -262,17 +265,11 @@ export async function requestResetPassword(req, res) {
 }
 
 export async function resetPassword(req, res) {
-  const { requestId, password, confirmPassword } = req.body;
-  if (!requestId || !password || !confirmPassword) {
+  const { requestId, password } = req.body;
+  if (!requestId || !password) {
     return res.status(400).json({
       status: "error",
-      message: "required fields: requestId, password, confirmPassword",
-    });
-  }
-  if (password !== confirmPassword) {
-    return res.status(400).json({
-      status: "error",
-      message: "password and confirm password should be same",
+      message: "required fields: requestId, password",
     });
   }
 
