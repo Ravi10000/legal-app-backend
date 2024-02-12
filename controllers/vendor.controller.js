@@ -191,7 +191,7 @@ export async function uploadDocument(req, res) {
   console.log(req?.file);
   console.log({ documentName, filename });
 
-  if (documentName === "certificate validitity") {
+  if (documentName === "practiceCertificateValiditity") {
     if (!value) {
       if (filename) deleteFile(filename);
       return res.status(400).json({
