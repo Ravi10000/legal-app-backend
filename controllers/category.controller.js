@@ -143,14 +143,14 @@ export async function deleteCategory(req, res) {
         .json({ message: "invalid categoryId, category not found" });
     }
     deleteFile(deletedCategory?.icon_url);
-    const servicesToDelete = await Service.find({ category: categoryId });
-
-    const deletedServices = await Promise.all(
-      servicesToDelete.map(async (service) => {
-        await Service.deleteMany({ parentService: service._id });
-      })
-    );
     await Service.deleteMany({ category: categoryId });
+    // const servicesToDelete = await Service.find({ category: categoryId });
+
+    // const deletedServices = await Promise.all(
+    //   servicesToDelete.map(async (service) => {
+    //     await Service.deleteMany({ parentService: service._id });
+    //   })
+    // );
 
     return res
       .status(200)
