@@ -2,10 +2,10 @@ import VendorService from "../models/vendor-service.model.js";
 import Vendor from "../models/vendor.model.js";
 
 export async function addVendorService(req, res) {
-  const { services } = req.body;
-  if (!services) {
-    return res.status(400).json({ message: "Services are required" });
-  }
+  const { services = [] } = req.body;
+  // if (!services) {
+  //   return res.status(400).json({ message: "Services are required" });
+  // }
   try {
     const vendor = await Vendor.findOne({ user: req.user._id });
     if (!vendor) {
@@ -13,20 +13,35 @@ export async function addVendorService(req, res) {
         .status(404)
         .json({ status: "error", message: "Vendor not found" });
     }
-    const vendorService = await VendorService.create({
-      services,
-      vendor,
-    });
+    let vendorService = await VendorService.findOne({ vendor: vendor._id });
     if (!vendorService) {
-      return res
-        .status(500)
-        .json({ status: "error", message: "invalid request" });
+      vendorService = await VendorService.create({
+        services,
+        vendor,
+      });
+    } else {
+      vendorService.services = services;
+      vendorService = await vendorService.save();
     }
     res.status(201).json({
       status: "success",
       message: "Vendor service added successfully",
       vendorService,
     });
+    // const vendorService = await VendorService.create({
+    //   services,
+    //   vendor,
+    // });
+    // if (!vendorService) {
+    //   return res
+    //     .status(500)
+    //     .json({ status: "error", message: "invalid request" });
+    // }
+    // res.status(201).json({
+    //   status: "success",
+    //   message: "Vendor service added successfully",
+    //   vendorService,
+    // });
   } catch (err) {
     console.log(err);
     res.status(500).json({ status: "error", message: err.message });
