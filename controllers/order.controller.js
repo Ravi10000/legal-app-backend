@@ -7,10 +7,10 @@ import { deleteFile } from "../utils/delete-file.js";
 
 export async function addOrder(req, res) {
   const { serviceId, transactionId, vendorId } = req.body;
-  if (!serviceId || !transactionId || !vendorId) {
+  if (!serviceId || !transactionId) {
     return res.status(400).json({
       status: "error",
-      message: "required fields: serviceId, transactionId, vendorId ",
+      message: "required fields: serviceId, and transactionId ",
     });
   }
   try {
@@ -27,20 +27,25 @@ export async function addOrder(req, res) {
         .status(400)
         .json({ status: "error", message: "Invalid transaction id" });
     }
-    const vendor = await User.findById(vendorId);
-    if (!vendor) {
-      // alos check if found user(vendor)'s usertype in VENDOR
-      return res
-        .status(400)
-        .json({ status: "error", message: "Invalid vendor id" });
-    }
-    const order = await Order.create({
+
+    const body = {
       clientId: req.user._id,
       serviceName: service.title,
       serviceId: service._id,
       transaction: transaction._id,
-      vendor: vendor._id,
-    });
+    };
+    if (vendorId) {
+      const vendor = await User.findById(vendorId);
+
+      if (!vendor) {
+        // alos check if found user(vendor)'s usertype in VENDOR
+        return res
+          .status(400)
+          .json({ status: "error", message: "Invalid vendor id" });
+      }
+      body.vendor = vendor._id;
+    }
+    const order = await Order.create(body);
     res
       .status(201)
       .json({ status: "success", message: "Order Place Successfully", order });
