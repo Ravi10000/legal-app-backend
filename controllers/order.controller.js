@@ -21,12 +21,12 @@ export async function addOrder(req, res) {
         .json({ status: "error", message: "Invalid serviceId" });
     }
 
-    const transaction = await Transaction.findById(transactionId);
-    if (!transaction) {
-      return res
-        .status(400)
-        .json({ status: "error", message: "Invalid transaction id" });
-    }
+    // const transaction = await Transaction.findById(transactionId);
+    // if (!transaction) {
+    //   return res
+    //     .status(400)
+    //     .json({ status: "error", message: "Invalid transaction id" });
+    // }
 
     const body = {
       clientId: req.user._id,
