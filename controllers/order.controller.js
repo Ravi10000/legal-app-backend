@@ -32,7 +32,7 @@ export async function addOrder(req, res) {
       clientId: req.user._id,
       serviceName: service.title,
       serviceId: service._id,
-      transaction: transaction._id,
+      transaction: transactionId,
     };
     if (vendorId) {
       const vendor = await User.findById(vendorId);
