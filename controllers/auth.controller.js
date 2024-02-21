@@ -39,7 +39,7 @@ export async function signupUser(req, res) {
       phoneNumber,
       usertype,
     });
-    if (usertype === "VENDOR") {
+    if (usertype === "VENDOR" || usertype === "EXCECUTIVE") {
       const vendor = await Vendor.create({ user: user._id });
       console.log({ vendor });
     }
@@ -255,7 +255,8 @@ export async function requestResetPassword(req, res) {
     const passwordChangeLink = `${process.env.CLIENT_URL}/reset-password/${passwordChangeRequest._id}`;
     // send reset password email
     console.log({ passwordChangeLink });
-    if (environmentType === "development") // !remove
+    if (environmentType === "development")
+      // !remove
       await sendResetPasswordMail({
         to: email,
         link: passwordChangeLink,
