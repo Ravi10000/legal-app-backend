@@ -116,6 +116,7 @@ export async function updateService(req, res) {
     childServices,
     parentService,
     serviceId,
+    isDeactivated,
   } = req.body;
   console.log({ body: req.body });
   if (!serviceId) {
@@ -137,6 +138,8 @@ export async function updateService(req, res) {
   if (shortDescription) serviceData.shortDescription = shortDescription;
   if (childServices) serviceData.childServices = childServices;
   if (parentService) serviceData.parentService = parentService;
+  if (typeof isDeactivated === "boolean")
+    serviceData.isDeactivated = isDeactivated;
 
   console.log({ serviceData });
   try {
