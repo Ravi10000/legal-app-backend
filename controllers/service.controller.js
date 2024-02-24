@@ -117,7 +117,7 @@ export async function updateService(req, res) {
     parentService,
     serviceId,
   } = req.body;
-
+  console.log({ body: req.body });
   if (!serviceId) {
     return res
       .status(400)
@@ -132,16 +132,18 @@ export async function updateService(req, res) {
   if (title) serviceData.title = title;
   if (description) serviceData.description = description;
   if (category) serviceData.category = category;
-  if (typeof marketPrice !== "number") serviceData.marketPrice = marketPrice;
-  if (typeof ourPrice !== "number") serviceData.ourPrice = ourPrice;
+  if (typeof marketPrice === "number") serviceData.marketPrice = marketPrice;
+  if (typeof ourPrice === "number") serviceData.ourPrice = ourPrice;
   if (shortDescription) serviceData.shortDescription = shortDescription;
   if (childServices) serviceData.childServices = childServices;
   if (parentService) serviceData.parentService = parentService;
 
+  console.log({ serviceData });
   try {
     const service = await Service.findByIdAndUpdate(serviceId, serviceData, {
       new: true,
     });
+    console.log({ service });
     if (!service) {
       return res.status(404).json({
         status: "error",
