@@ -4,7 +4,7 @@ export async function addServiceRequest(req, res) {
   const { fieldName, fieldType, fieldDescription, service } = req.body;
   if (!fieldName || !fieldType || !fieldDescription || !service) {
     return res.status(400).json({
-      success: "error",
+      status: "error",
       message:
         "required field :fieldName, fieldType, fieldDescription, service, one or more missing fields",
     });
@@ -19,7 +19,7 @@ export async function addServiceRequest(req, res) {
   ];
   if (!validFieldTypes.includes(fieldType)) {
     return res.status(400).json({
-      success: "error",
+      status: "error",
       message: "fieldType must be one of " + validFieldTypes.join(", "),
     });
   }
@@ -33,15 +33,15 @@ export async function addServiceRequest(req, res) {
       createdBy: req.user._id,
     });
     res.status(201).json({
-      success: "success",
+      status: "success",
       message: "Service Request added successfully",
-      review: serviceRequest,
+      serviceRequest,
     });
   } catch (err) {
     console.log(err);
     res.status(500),
       json({
-        success: "error",
+        status: "error",
         message: "Internal Server Error",
       });
   }
@@ -51,14 +51,14 @@ export async function getAllServiceRequests(req, res) {
   try {
     const serviceRequests = await ServiceRequest.find();
     res.status(200).json({
-      success: "success",
+      status: "success",
       message: "All Services Requests Sent",
       serviceRequests,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      success: "error",
+      status: "error",
       message: "Internal Server Error",
     });
   }
@@ -69,24 +69,24 @@ export async function getServiceRequestById(req, res) {
   if (!serviceRequestId)
     return res
       .status(400)
-      .json({ success: "error", message: "serviceRequestId is required" });
+      .json({ status: "error", message: "serviceRequestId is required" });
   try {
     const serviceRequest = await ServiceRequest.findById(serviceRequestId);
     if (!serviceRequest) {
       return res.status(404).json({
-        success: "error",
+        status: "error",
         message: "Service Request not found",
       });
     }
     res.status(200).json({
-      success: "success",
+      status: "success",
       message: "Service Request Sent",
       serviceRequest,
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      success: "error",
+      status: "error",
       message: "Internal Server Error",
     });
   }
@@ -97,25 +97,25 @@ export async function deleteServiceRequest(req, res) {
   if (!serviceRequestId)
     return res
       .status(400)
-      .json({ success: "error", message: "serviceRequestId is required" });
+      .json({ status: "error", message: "serviceRequestId is required" });
   try {
     const serviceRequest = await ServiceRequest.findByIdAndDelete(
       serviceRequestId
     );
     if (!serviceRequest) {
       return res.status(404).json({
-        success: "error",
+        status: "error",
         message: "Service Request not found",
       });
     }
     res.status(200).json({
-      success: "success",
+      status: "success",
       message: "Service Request Deleted Successfully",
     });
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      success: "error",
+      status: "error",
       message: "Internal Server Error",
     });
   }
@@ -126,7 +126,7 @@ export async function updateServiceRequest(req, res) {
     req.body;
   if (!serviceRequestId) {
     return res.status(400).json({
-      success: "error",
+      status: "error",
       message: "required: serviceRequestId",
     });
   }
@@ -140,7 +140,7 @@ export async function updateServiceRequest(req, res) {
   ];
   if (fieldType && !validFieldTypes.includes(fieldType)) {
     return res.status(400).json({
-      success: "error",
+      status: "error",
       message: "fieldType must be one of " + validFieldTypes.join(", "),
     });
   }
@@ -159,7 +159,7 @@ export async function updateServiceRequest(req, res) {
       { new: true }
     );
     res.status(201).json({
-      success: "success",
+      status: "success",
       message: "Service Request updated successfully",
       review: serviceRequest,
     });
@@ -167,7 +167,7 @@ export async function updateServiceRequest(req, res) {
     console.log(err);
     res.status(500),
       json({
-        success: "error",
+        status: "error",
         message: "Internal Server Error",
       });
   }
