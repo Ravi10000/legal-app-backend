@@ -172,3 +172,17 @@ export async function updateServiceRequest(req, res) {
       });
   }
 }
+
+export async function getServiceRequestByServiceId(req, res, next) {
+  try {
+    const { serviceId } = req.params;
+    const serviceRequests = await ServiceRequest.find({ service: serviceId });
+    res.status(200).json({
+      status: "success",
+      message: "requests fetched",
+      serviceRequests,
+    });
+  } catch (err) {
+    next(err);
+  }
+}

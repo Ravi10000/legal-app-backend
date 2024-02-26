@@ -5,6 +5,7 @@ import {
   deleteServiceRequest,
   getAllServiceRequests,
   getServiceRequestById,
+  getServiceRequestByServiceId,
   updateServiceRequest,
 } from "../controllers/service-request.controller.js";
 
@@ -13,6 +14,7 @@ const router = express.Router();
 router.post("/", fetchUser, isValidUser, addServiceRequest);
 router.put("/", fetchUser, isValidUser, updateServiceRequest);
 
+router.get("/service/:serviceId", getServiceRequestByServiceId);
 router.get("/:serviceRequestId", getServiceRequestById);
 router.get("/", getAllServiceRequests);
 
